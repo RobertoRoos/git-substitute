@@ -15,3 +15,6 @@ packages = [
 [tool.poetry.dependencies]
 python = "^3.10"
 gitpython = "^3.1.43"
+
+[tool.poetry.scripts]
+git_substitute = "git_substitute.__main__:main"
