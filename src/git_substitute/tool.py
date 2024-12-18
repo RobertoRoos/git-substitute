@@ -82,10 +82,14 @@ class SubstituteTool:
 
         template_content = template_file.read_text()
 
+        # Perform placeholder substitution:
         re_keyword = re.compile(r"{{([^}]+)}}")
         new_content, substitutions = re_keyword.subn(
             self._keyword_replace, template_content
         )
+
+        # Now fix escaped characters:
+        new_content = new_content.replace(r"\{\{", "{{").replace(r"\}\}", "}}")
 
         if self.args.stdout:
             print(new_content, end="")
