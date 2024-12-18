@@ -1,10 +1,14 @@
 from __future__ import annotations
 
+import logging
+import re
+import sys
 from argparse import ArgumentParser
 from pathlib import Path
-import re
 
 from git import Repo
+
+logger = logging.getLogger("git_substitute")
 
 
 class SubstituteTool:
@@ -13,6 +17,8 @@ class SubstituteTool:
     Class can be instantiated normally but is made to run with system arguments.
     ``argparse`` is done in the constructor.
     """
+
+    EMPTY = "[empty]"
 
     def __init__(self, *args):
         """Pass e.g. ``sys.args[1:]`` (skipping the script part of the arguments)."""
@@ -42,26 +48,120 @@ class SubstituteTool:
             action="store_true",
             help="Print information to the terminal",
         )
+        parser.add_argument(
+            "--quiet",
+            "-q",
+            default=False,
+            action="store_true",
+            help="Print logs to stderr instead of stdout",
+        )
 
         self.args = parser.parse_args(*args)
         self.repo: Repo | None = None
+        self.is_empty: bool = False  # True if there is not a single commit
+
+        # Adjust logger:
+        if self.args.verbose:
+            logger.setLevel(logging.DEBUG)
+        if self.args.quiet:
+            logging.basicConfig(stream=sys.stderr)
 
     def run(self) -> int:
         self.repo = Repo(self.args.repo)
+        logger.debug("Using Git directory: " + self.repo.common_dir)
+
+        # Check if repo is entirely emtpy:
+        try:
+            _ = self.repo.head.object
+        except ValueError:
+            logger.warning("Git repository is entirely empty")
+            self.is_empty = True
 
         template_file = Path(self.args.template).absolute()
+        logger.debug(f"Using template file: {template_file}")
 
         template_content = template_file.read_text()
 
         re_keyword = re.compile(r"{{([^}]+)}}")
-        new_content, substitutions = re_keyword.subn(self._keyword_repl, template_content)
+        new_content, substitutions = re_keyword.subn(
+            self._keyword_replace, template_content
+        )
 
         if self.args.stdout:
             print(new_content, end="")
+            return 0
 
-        return 0
+        if self.args.output:
+            target_file = Path(self.args.output)
+        else:
+            target_file = self._deduce_target_file(template_file)
 
-    def _keyword_repl(self, match) -> str:
+        logger.debug(f"Going to write to: {target_file}")
+
+        written = target_file.write_text(new_content)
+        if written == 0:
+            logger.warning(f"Failed to write anything to {target_file}")
+            return 255  # Error
+
+        logger.debug(f"Successfully written {written} bytes")
+
+        return 0  # Ok
+
+    def _keyword_replace(self, match) -> str:
         """Callback for regex replacement."""
         keyword: str = match.group(1)  # Skipping the "{{" and "}}"
-        return ""
+
+        if keyword.startswith("GIT_"):
+            # Get value through local property
+            if self.is_empty:
+                return self.EMPTY
+            return getattr(self, keyword.lower())
+
+        if keyword.startswith("git "):
+            # Run function instead
+            commands_str = keyword[4:]  # Strip "git "
+            commands = commands_str.split(" ")
+            func = getattr(self.repo.git, commands[0])  # Retrieve function handle
+            return func(*commands[1:])  # Call, passing in remaining words as arguments
+
+        raise ValueError(f"Unrecognized class of placeholder: {keyword}")
+
+    @staticmethod
+    def _deduce_target_file(template: Path) -> Path:
+        """Guess a target file, based on the template path."""
+        name = template.name
+        remove = ["_template", "Template", "TEMPLATE"]
+        for r in remove:
+            name = name.replace(r, "")
+
+        return template.parent / name
+
+    @property
+    def git_hash(self) -> str:
+        return self.repo.head.object.hexsha
+
+    @property
+    def git_hash_short(self) -> str:
+        return self.git_hash[:8]
+
+    @property
+    def git_date(self) -> str:
+        return self.repo.head.object.committed_datetime.strftime("%d-%m-%Y %H:%M:%S")
+
+    @property
+    def git_tag(self) -> str:
+        # Getting the most relevant tag through `self.repo` is not so straightforward
+        # Easier to just use the `git tag` command directly
+        return self.repo.git.tag()
+
+    @property
+    def git_branch(self) -> str:
+        return self.repo.active_branch.name
+
+    @property
+    def git_description(self):
+        return self.repo.git.describe("--tags", "--always")
+
+    @property
+    def git_description_dirty(self):
+        return self.repo.git.describe("--tags", "--always", "--dirty")
