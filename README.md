@@ -45,3 +45,4 @@ In case you are not sure what information to embed, use `GIT_DESCRIPTION_DIRTY` 
 | GIT_BRANCH            | Current branch name                                                                                             | master                                   |
 | GIT_DESCRIPTION       | Most relevant tag + number of commits since then + last commit  (result of `git describe --tags --always`)      | v0.0.1-1-g4cc498b                        |
 | GIT_DESCRIPTION_DIRTY | Same as `GIT_DESCRIPTION`, except it also adds the `--dirty` argument to mark if there were uncommitted changes | v0.0.1-1-g4cc498b-dirty                  |
+| GIT_DIRTY             | `1` if there are uncommited chances, otherwise `0`                                                              | 0                                        |

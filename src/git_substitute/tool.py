@@ -165,3 +165,7 @@ class SubstituteTool:
     @property
     def git_description_dirty(self):
         return self.repo.git.describe("--tags", "--always", "--dirty")
+
+    @property
+    def git_dirty(self) -> str:
+        return "1" if self.repo.is_dirty() else "0"
