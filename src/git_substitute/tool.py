@@ -4,6 +4,7 @@ import logging
 import re
 import sys
 from argparse import ArgumentParser
+from datetime import datetime
 from pathlib import Path
 
 from git import Repo
@@ -19,6 +20,7 @@ class SubstituteTool:
     """
 
     EMPTY = "[empty]"
+    DATETIME_FORMAT = "%d-%m-%Y %H:%M:%S"
 
     def __init__(self, *args):
         """Pass e.g. ``sys.args[1:]`` (skipping the script part of the arguments)."""
@@ -150,7 +152,11 @@ class SubstituteTool:
 
     @property
     def git_date(self) -> str:
-        return self.repo.head.object.committed_datetime.strftime("%d-%m-%Y %H:%M:%S")
+        return self.repo.head.object.committed_datetime.strftime(self.DATETIME_FORMAT)
+
+    @property
+    def git_now(self) -> str:
+        return datetime.now().strftime(self.DATETIME_FORMAT)
 
     @property
     def git_tag(self) -> str:

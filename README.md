@@ -1,6 +1,7 @@
 # Git Substitute
 
 This repository contains a basic tool to generate files with Git information through templates.
+A typical application could be embedding Git version info in source code right before compilation 
 
 ## Installing
 
@@ -41,6 +42,7 @@ In case you are not sure what information to embed, use `GIT_DESCRIPTION_DIRTY` 
 | GIT_HASH              | Full hash of the last commit                                                                                    | 4cc498b3c37375d8d9138fdab553ced012cafc7a |
 | GIT_HASH_SHORT        | 8-char hash of the last commit                                                                                  | 4cc498b3                                 |
 | GIT_DATE              | Datetime of the last commit                                                                                     | 17-12-2024 12:47:10                      |
+| GIT_NOW               | The current date and time, not a git command at all                                                             | 19-12-2024 16:20:35                      |
 | GIT_TAG               | Most relevant tag (result of `git tag`)                                                                         | v1.0.0                                   |
 | GIT_BRANCH            | Current branch name                                                                                             | master                                   |
 | GIT_DESCRIPTION       | Most relevant tag + number of commits since then + last commit  (result of `git describe --tags --always`)      | v0.0.1-1-g4cc498b                        |
