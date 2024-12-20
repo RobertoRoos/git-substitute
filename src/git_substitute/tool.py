@@ -9,6 +9,8 @@ from pathlib import Path
 
 from git import Repo
 
+from . import __version__
+
 logger = logging.getLogger("git_substitute")
 
 
@@ -59,6 +61,9 @@ class SubstituteTool:
             default=False,
             action="store_true",
             help="Print logs to stderr instead of stdout",
+        )
+        parser.add_argument(
+            "--version", "-V", action="version", version="%(prog)s " + __version__
         )
 
         self.args = parser.parse_args(*args)
@@ -171,6 +176,19 @@ class SubstituteTool:
         # Getting the most relevant tag through `self.repo` is not so straightforward
         # Easier to just use the `git tag` command directly
         return self.repo.git.tag()
+
+    @property
+    def git_version(self) -> str:
+        tag = self.repo.git.tag()
+        re_version = re.compile(r"\d+\.\d+\.+\d+")
+        match = re_version.search(tag)
+        if not match:
+            logger.warning(
+                f"Failed to determine version from {tag}, continuing with 0.0.0"
+            )
+            return "0.0.0"
+
+        return match.group()
 
     @property
     def git_branch(self) -> str:
