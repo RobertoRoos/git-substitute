@@ -44,6 +44,12 @@ class SubstituteTool:
             help="Echo result to the terminal instead",
         )
         parser.add_argument(
+            "--exact-only",
+            action="store_true",
+            default=False,
+            help="Without this flag, the repository is searched a level higher, with this flag only the specified directory is considered",
+        )
+        parser.add_argument(
             "--repo",
             "-r",
             help="Set explicit root to Git repository (by default, start searching for current directory)",
@@ -77,7 +83,9 @@ class SubstituteTool:
             logging.basicConfig(stream=sys.stderr)
 
     def run(self) -> int:
-        self.repo = Repo(self.args.repo)
+        self.repo = Repo(
+            self.args.repo, search_parent_directories=(not self.args.exact_only)
+        )
         logger.debug("Using Git directory: " + self.repo.common_dir)
 
         # Check if repo is entirely emtpy:

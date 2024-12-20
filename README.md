@@ -13,7 +13,7 @@ But some more old-fashioned platforms, like TwinCAT PLC, don't have such options
 ## Help
 
 ```
-usage: git_substitute [-h] [--output OUTPUT | --stdout] [--repo REPO] [--verbose] [--quiet] template
+usage: git_substitute [-h] [--output OUTPUT | --stdout] [--exact-only] [--repo REPO] [--verbose] [--quiet] [--version] template
 
 Generate files with information from Git, based on templates.
 
@@ -25,14 +25,16 @@ options:
   --output OUTPUT, -o OUTPUT
                         Output is saved to this file
   --stdout              Echo result to the terminal instead
+  --exact-only          Without this flag, the repository is searched a level higher, with this flag only the specified directory is considered
   --repo REPO, -r REPO  Set explicit root to Git repository (by default, start searching for current directory)
   --verbose, -v         Print information to the terminal
   --quiet, -q           Print logs to stderr instead of stdout
+  --version, -V         show program's version number and exit
 ```
 
 ## Installing
 
-The recommended system-wide install is through pipx: `pipx install git-substitute`
+The recommended system-wide install is through [pipx](https://pipx.pypa.io/stable/): `pipx install git-substitute`
 
 You can also install it regularly through pip (in your `venv`): `pip install git-substitute`.
 
