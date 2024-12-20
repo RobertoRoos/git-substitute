@@ -69,3 +69,14 @@ class TestSubstitute:
 
         new_content = new_file.read_text()
         assert "{{" not in new_content and "}}" not in new_content
+
+    def test_escape(self):
+        this_repo = self.DATA.parent.parent
+        tool = SubstituteTool(["escape_template.cpp", "--repo", str(this_repo)])
+        assert tool.run() == 0
+
+        new_file = self.tmp_path / "escape.cpp"
+        assert new_file.exists()
+
+        new_content = new_file.read_text()
+        assert 'const std::string literals = "{{x}}";' in new_content

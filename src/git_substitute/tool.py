@@ -29,7 +29,10 @@ class SubstituteTool:
             description="Generate files with information from Git, based on templates."
         )
 
-        parser.add_argument("template", help="Path to the template file")
+        parser.add_argument(
+            "template",
+            help="Path to the template file. If this filename ends with `_template`, `_Template` or `Template`, and no other options are supplied, the output will be a similar file without this suffix.",
+        )
         group = parser.add_mutually_exclusive_group()
         group.add_argument("--output", "-o", help="Output is saved to this file")
         group.add_argument(
@@ -139,6 +142,11 @@ class SubstituteTool:
         remove = ["_template", "Template", "TEMPLATE"]
         for r in remove:
             name = name.replace(r, "")
+
+        if name == template.name:
+            raise ValueError(
+                f"Failed to deduce a target name from the file `{template.name}`. Use the `--output` flag or make sure your template file ends with `_?[Tt]emplate`."
+            )
 
         return template.parent / name
 

@@ -10,6 +10,26 @@ For many modern platforms, this is not relevant.
 In Python you can get version info automatically already through `setuptools` or `poetry` backends and in C++ you could configure CMake to do the same.
 But some more old-fashioned platforms, like TwinCAT PLC, don't have such options and then a tool like this could come in handy.
 
+## Help
+
+```
+usage: git_substitute [-h] [--output OUTPUT | --stdout] [--repo REPO] [--verbose] [--quiet] template
+
+Generate files with information from Git, based on templates.
+
+positional arguments:
+  template              Path to the template file. If this filename ends with `_template`, `_Template` or `Template`, and no other options are supplied, the output will be a similar file without this suffix.
+
+options:
+  -h, --help            show this help message and exit
+  --output OUTPUT, -o OUTPUT
+                        Output is saved to this file
+  --stdout              Echo result to the terminal instead
+  --repo REPO, -r REPO  Set explicit root to Git repository (by default, start searching for current directory)
+  --verbose, -v         Print information to the terminal
+  --quiet, -q           Print logs to stderr instead of stdout
+```
+
 ## Installing
 
 Install with `pip install git-substitute`.
