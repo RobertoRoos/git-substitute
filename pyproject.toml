@@ -5,7 +5,7 @@ build-backend = "poetry_dynamic_versioning.backend"
 [tool.poetry]
 name = "git-substitute"
 version = "0.0.0"  # Replaced by dynamic versioning
-description = ""
+description = "Tool to generate files from templates using Git info"
 authors = ["Robert Roos <robert.soor@gmail.com>"]
 readme = "README.md"
 packages = [
