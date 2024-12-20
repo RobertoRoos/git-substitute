@@ -1,13 +1,17 @@
 # Git Substitute
 
+[![PyPI](https://img.shields.io/pypi/v/git-substitute)](https://pypi.org/project/git-substitute/)
+[![tests](https://github.com/RobertoRoos/git-substitute/actions/workflows/tests.yml/badge.svg)](https://github.com/RobertoRoos/git-substitute/actions)
+
 This repository contains a basic tool to generate files with Git information through templates.
 A typical application could be embedding Git version info in source code right before compilation 
 
 ## Installing
 
-From a local clone, run `poetry install` or `pip install . [-e]`.
+Install with `pip install git-substitute`.
 
-You can also install directly from git with `pip install https://github.com/RobertoRoos/git-substitute`.
+Or from a local clone, run `poetry install` or `pip install . [-e]`.
+You could also install directly from git with `pip install https://github.com/RobertoRoos/git-substitute`.
 
 ## How to use
 
@@ -74,3 +78,9 @@ Which will create `src/version.cpp` and can be compiled into your application.
 Install with development dependencies with `poetry install --with dev`.
 
 [Poetry Dynamic Versioning](https://pypi.org/project/poetry-dynamic-versioning/) is used for automatic version detection.
+
+### How to publish
+
+The package is published to PyPi, at https://pypi.org/project/git-substitute/.
+
+Publishing is now done manually, through `poetry build` and `poetry publish`.
