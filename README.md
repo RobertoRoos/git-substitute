@@ -4,7 +4,11 @@
 [![tests](https://github.com/RobertoRoos/git-substitute/actions/workflows/tests.yml/badge.svg)](https://github.com/RobertoRoos/git-substitute/actions)
 
 This repository contains a basic tool to generate files with Git information through templates.
-A typical application could be embedding Git version info in source code right before compilation 
+A typical application could be embedding Git version info into source code right before compilation.
+
+For many modern platforms, this is not relevant.
+In Python you can get version info automatically already through `setuptools` or `poetry` backends and in C++ you could configure CMake to do the same.
+But some more old-fashioned platforms, like TwinCAT PLC, don't have such options and then a tool like this could come in handy.
 
 ## Installing
 
