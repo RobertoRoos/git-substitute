@@ -68,3 +68,9 @@ git_substitute src/version_template.cpp
 ```
 
 Which will create `src/version.cpp` and can be compiled into your application.
+
+## How to develop
+
+Install with development dependencies with `poetry install --with dev`.
+
+[Poetry Dynamic Versioning](https://pypi.org/project/poetry-dynamic-versioning/) is used for automatic version detection.
