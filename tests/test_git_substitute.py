@@ -31,7 +31,11 @@ class TestCLI:
 
 
 class TestSubstitute:
-    """Test functionality."""
+    """Test functionality.
+
+    The git repository of this project is used for Git info. This makes for a fixture
+    that is not static, but it is easy.
+    """
 
     tmp_path: Path | None = None
 
@@ -49,4 +53,19 @@ class TestSubstitute:
         tool = SubstituteTool(["variables_template.cpp", "--repo", str(this_repo)])
         assert tool.run() == 0
 
-        assert (self.tmp_path / "variables.cpp").exists()
+        new_file = self.tmp_path / "variables.cpp"
+        assert new_file.exists()
+
+        new_content = new_file.read_text()
+        assert "{{" not in new_content and "}}" not in new_content
+
+    def test_commands(self):
+        this_repo = self.DATA.parent.parent
+        tool = SubstituteTool(["commands_template.cpp", "--repo", str(this_repo)])
+        assert tool.run() == 0
+
+        new_file = self.tmp_path / "commands.cpp"
+        assert new_file.exists()
+
+        new_content = new_file.read_text()
+        assert "{{" not in new_content and "}}" not in new_content
