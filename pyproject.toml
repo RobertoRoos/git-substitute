@@ -23,6 +23,7 @@ git_substitute = "git_substitute.__main__:main"
 optional = true
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3.4"
+pytest-cov = "^6.0.0"
 
 [tool.poetry-dynamic-versioning]
 enable = true
