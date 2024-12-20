@@ -32,7 +32,9 @@ options:
 
 ## Installing
 
-Install with `pip install git-substitute`.
+The recommended system-wide install is through pipx: `pipx install git-substitute`
+
+You can also install it regularly through pip (in your `venv`): `pip install git-substitute`.
 
 Or from a local clone, run `poetry install` or `pip install . [-e]`.
 You could also install directly from git with `pip install https://github.com/RobertoRoos/git-substitute`.
