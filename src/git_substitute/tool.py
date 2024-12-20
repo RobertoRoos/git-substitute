@@ -200,7 +200,13 @@ class SubstituteTool:
 
     @property
     def git_branch(self) -> str:
-        return self.repo.active_branch.name
+        try:
+            return self.repo.active_branch.name
+        except TypeError as err:
+            if "HEAD is a detached" not in str(err):
+                raise  # Re-raise error again, can't handle this
+
+            return self.EMPTY  # In detached head, current branch is not valid
 
     @property
     def git_description(self):
